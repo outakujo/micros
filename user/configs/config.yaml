@@ -1,0 +1,19 @@
+server:
+  http:
+    addr: :8000
+    timeout: 1s
+  grpc:
+    addr: :9000
+    timeout: 1s
+data:
+  database:
+    db: micro
+    addr: localhost:3306
+    user: root
+    pass: "123456"
+  redis:
+    ip: 127.0.0.1
+    port: 6379
+  etcd:
+    ip: 127.0.0.1
+    port: 2379

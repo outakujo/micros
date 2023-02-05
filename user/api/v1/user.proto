@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "user/api/v1;v1";
+
+service User {
+  rpc CreateUser (CreateUserRequest) returns (Model){
+    option(google.api.http) = {
+      post:"v1",
+      body:"*"
+    };
+  }
+  rpc UpdateUser (UpdateUserRequest) returns (Model){
+    option(google.api.http) = {
+      put:"v1",
+      body:"*"
+    };
+  }
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply){
+    option(google.api.http) = {
+      delete:"v1/{username}",
+    };
+  }
+  rpc GetUser (GetUserRequest) returns (Model){
+    option(google.api.http) = {
+      get:"v1/{username}"
+    };
+  }
+  rpc ListUser (ListUserRequest) returns (ListUserReply){
+    option(google.api.http) = {
+      get:"v1/user/list",
+    };
+  }
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string password = 2;
+  string nickname = 3;
+}
+
+message UpdateUserRequest {
+  string username = 1;
+  string password = 2;
+  string nickname = 3;
+}
+
+message DeleteUserRequest {
+  string username = 1;
+}
+
+message DeleteUserReply {}
+
+message GetUserRequest {
+  string username = 1;
+}
+
+message Model {
+  int64 id = 1;
+  string username = 2;
+  string password = 3;
+  string nickname = 4;
+}
+
+message ListUserRequest {
+  int64 page = 1;
+  int64 size = 2;
+}
+
+message ListUserReply {
+  repeated Model list = 1;
+  int64 count = 2;
+  int64 maxPage = 3;
+}
