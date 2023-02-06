@@ -1,5 +1,7 @@
 package biz
 
+import "github.com/golang-jwt/jwt/v4"
+
 type User struct {
 	ID       int
 	Username string
@@ -21,4 +23,10 @@ type Page struct {
 type PageUser struct {
 	Page
 	List []*User `json:"list"`
+}
+
+type Claim struct {
+	*jwt.RegisteredClaims
+	ID       int
+	Username string
 }

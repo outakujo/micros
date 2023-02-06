@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/metadata"
 	"time"
 	"user/internal/biz"
 
@@ -23,6 +24,11 @@ func NewUserService(biz *biz.UserBiz, dis *etcd.Registry, logger log.Logger) *Us
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.Model, error) {
+	if md, ok := metadata.FromServerContext(ctx); ok {
+		// 从header里token值
+		extra := md.Get("token")
+		s.log.Infof("extra %s", extra)
+	}
 	var u biz.User
 	u.Username = req.Username
 	u.Nickname = req.Nickname

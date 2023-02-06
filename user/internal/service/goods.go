@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
+	"github.com/go-kratos/kratos/v2/middleware/circuitbreaker"
 	"github.com/go-kratos/kratos/v2/selector"
 	"github.com/go-kratos/kratos/v2/selector/filter"
 	"github.com/go-kratos/kratos/v2/selector/wrr"
@@ -18,7 +19,9 @@ func goodsClient(dis *etcd.Registry) (v1.GoodsClient, error) {
 	selector.SetGlobalSelector(wrr.NewBuilder())
 	dial, err := grpc.DialInsecure(timeout, grpc.WithEndpoint(endpoint),
 		grpc.WithDiscovery(dis),
-		grpc.WithNodeFilter(filter.Version("1.0")))
+		grpc.WithNodeFilter(filter.Version("1.0")),
+		grpc.WithMiddleware(circuitbreaker.Client()),
+	)
 	if err != nil {
 		return nil, err
 	}

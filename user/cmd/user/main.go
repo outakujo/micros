@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/go-kratos/kratos/v2/config/env"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"os"
 
@@ -43,12 +44,18 @@ func main() {
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
+			env.NewSource(""),
 		),
 	)
 	defer c.Close()
 
 	if err := c.Load(); err != nil {
 		panic(err)
+	}
+
+	s, err := c.Value("mode").String()
+	if err == nil {
+		log.NewHelper(logger).Info(s)
 	}
 
 	var bc conf.Bootstrap
