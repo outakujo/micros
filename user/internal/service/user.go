@@ -7,6 +7,7 @@ import (
 	"github.com/go-kratos/kratos/v2/metadata"
 	"time"
 	"user/internal/biz"
+	"user/internal/conf"
 
 	pb "user/api/v1"
 	v1 "user/api/v1"
@@ -17,10 +18,11 @@ type UserService struct {
 	biz *biz.UserBiz
 	dis *etcd.Registry
 	log *log.Helper
+	au  *conf.Auth
 }
 
-func NewUserService(biz *biz.UserBiz, dis *etcd.Registry, logger log.Logger) *UserService {
-	return &UserService{biz: biz, dis: dis, log: log.NewHelper(logger)}
+func NewUserService(biz *biz.UserBiz, dis *etcd.Registry, au *conf.Auth, logger log.Logger) *UserService {
+	return &UserService{biz: biz, dis: dis, log: log.NewHelper(logger), au: au}
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.Model, error) {
@@ -46,7 +48,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.Model, error) {
 	timeout, cancelFunc := context.WithTimeout(context.Background(), time.Second)
 	defer cancelFunc()
-	client, err := goodsClient(s.dis)
+	client, err := goodsClient(s.dis, s.au)
 	if err != nil {
 		return nil, err
 	}

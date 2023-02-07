@@ -20,12 +20,6 @@ func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger)
 			ratelimit.Server(),
 			// 自定义header，前缀为空
 			metadata.Server(metadata.WithPropagatedPrefix("")),
-			// 自定义内部服务之间认证，无法对外
-			//jwt.Server(func(token *jwt2.Token) (interface{}, error) {
-			//	return []byte(c.JwtKey), nil
-			//}, jwt.WithClaims(func() jwt2.Claims {
-			//	return &biz.Claim{}
-			//})),
 		),
 	}
 	if c.Http.Network != "" {

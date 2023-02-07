@@ -5,7 +5,6 @@ server:
   grpc:
     addr: :9000
     timeout: 1s
-  jwtKey: asdad
 data:
   database:
     db: micro
@@ -18,3 +17,6 @@ data:
   etcd:
     ip: 127.0.0.1
     port: 2379
+auth:
+  key: qweq
+  goodsKey: awdsd

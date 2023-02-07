@@ -14,6 +14,6 @@ import (
 	"user/internal/service"
 )
 
-func wireApp(c *conf.Server, da *conf.Data, log log.Logger) (*kratos.App, func(), error) {
+func wireApp(*conf.Server, *conf.Data, *conf.Auth, log.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(biz.ProviderSet, data.ProviderSet, service.ProviderSet, server.ProviderSet, newDiscovery, newApp))
 }
