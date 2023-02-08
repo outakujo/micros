@@ -5,11 +5,12 @@ import (
 	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/metadata"
+	"github.com/go-redsync/redsync/v4"
 	"time"
+	v1 "user/api/v1"
 	"user/internal/biz"
 	"user/internal/conf"
-
-	v1 "user/api/v1"
+	"user/internal/pkg/sync"
 )
 
 type UserService struct {
@@ -18,13 +19,17 @@ type UserService struct {
 	dis *etcd.Registry
 	log *log.Helper
 	au  *conf.Auth
+	mut *redsync.Mutex
 }
 
 func NewUserService(biz *biz.UserBiz, dis *etcd.Registry, au *conf.Auth, logger log.Logger) *UserService {
-	return &UserService{biz: biz, dis: dis, log: log.NewHelper(logger), au: au}
+	return &UserService{biz: biz, dis: dis, log: log.NewHelper(logger), au: au,
+		mut: sync.Mutex()}
 }
 
 func (s *UserService) CreateUser(ctx context.Context, req *v1.CreateUserRequest) (*v1.Model, error) {
+	s.mut.Lock()
+	defer s.mut.Unlock()
 	if md, ok := metadata.FromServerContext(ctx); ok {
 		// 从header里token值
 		extra := md.Get("token")

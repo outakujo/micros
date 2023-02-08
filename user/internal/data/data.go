@@ -3,6 +3,7 @@ package data
 import (
 	"fmt"
 	"user/internal/conf"
+	"user/internal/pkg/sync"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -20,6 +21,7 @@ type Data struct {
 
 // NewData .
 func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+	sync.InitRedis(c.Redis)
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}

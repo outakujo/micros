@@ -41,6 +41,7 @@ message Data {
   message Redis {
     string ip = 1;
     int64 port = 2;
+    string lockKey = 3;
   }
 
   message Etcd {

@@ -14,6 +14,7 @@ data:
   redis:
     ip: 127.0.0.1
     port: 6379
+    lockKey: micro-lock
   etcd:
     ip: 127.0.0.1
     port: 2379
